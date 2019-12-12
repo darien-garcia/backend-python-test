@@ -1,6 +1,7 @@
 from flask import Flask, g
 import sqlite3
 from alayatodo.db import db
+from alayatodo.auth import auth
 
 # configuration
 DATABASE = '/tmp/alayatodo.db'
@@ -9,19 +10,15 @@ SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
 
+def create_app():
 
-app = Flask(__name__)
-app.config.from_object(__name__)
+        app = Flask(__name__)
+        app.config.from_object(__name__)
 
+        app.register_blueprint(auth.bp)
 
-@app.before_request
-def before_request():
-    db.connect_db()
-
-
-@app.teardown_request
-def teardown_request(exception):
-    db.close_db(exception)
+        
+        return app
 
 
 import alayatodo.views
