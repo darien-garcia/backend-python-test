@@ -5,33 +5,23 @@ Usage:
   main.py initdb
 """
 from docopt import docopt
-import subprocess
 import os
 import sqlite3
 
 from alayatodo import app
-
+from alayatodo import db
 
 def _run_sql(filename):
     try:
-        db = get_db()
+        db_connection = db.connect_db()
         fullPath = os.path.join(os.path.dirname(__file__), filename)
         if os.path.exists(fullPath):
             with open(fullPath, 'r') as f:
-                db.executescript(f.read())
+                db_connection.executescript(f.read())
         
     except Exception as ex:
         print(ex.__str__())
         os._exit(1)
-
-def get_db():
-    db = sqlite3.connect(
-        os.path.join(os.path.dirname(os.path.realpath(__file__)) + app.config['DATABASE'])
-    )
-    db.row_factory = sqlite3.Row
-
-    return db
-    
 
 if __name__ == '__main__':
     args = docopt(__doc__)
