@@ -3,7 +3,6 @@ import os
 
 import click
 
-from alayatodo import app
 from flask import current_app, g
 from flask.cli import with_appcontext
 
@@ -18,8 +17,11 @@ def get_db():
         return db
 
 def connect_db():
+    return create_db_connection(current_app.config['DATABASE'])
+
+def create_db_connection(database):
     db = sqlite3.connect(
-        os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + app.config['DATABASE'])
+        os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))) + database)
     )
     db.row_factory = sqlite3.Row
 

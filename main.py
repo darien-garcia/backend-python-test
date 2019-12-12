@@ -8,12 +8,14 @@ from docopt import docopt
 import os
 import sqlite3
 
-from alayatodo import app
+from alayatodo import create_app
 from alayatodo import db
+
+app = create_app()
 
 def _run_sql(filename):
     try:
-        db_connection = db.connect_db()
+        db_connection = db.create_db_connection(app.config['DATABASE'])
         fullPath = os.path.join(os.path.dirname(__file__), filename)
         if os.path.exists(fullPath):
             with open(fullPath, 'r') as f:

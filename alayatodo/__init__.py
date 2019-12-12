@@ -1,24 +1,26 @@
 from flask import Flask, g
 import sqlite3
-from alayatodo.db import db
-from alayatodo.auth import auth
+import os
 
-# configuration
-DATABASE = '/tmp/alayatodo.db'
-DEBUG = True
-SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'default'
-
-def create_app():
-
-        app = Flask(__name__)
-        app.config.from_object(__name__)
-
-        app.register_blueprint(auth.bp)
-
-        
-        return app
+from flask import Flask
 
 
-import alayatodo.views
+def create_app(test_config=None):
+    
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DEBUG = True,
+        DATABASE='/tmp/alayatodo.db',
+    )
+
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    from . import auth
+    app.register_blueprint(auth.bp)
+
+    return app
+
