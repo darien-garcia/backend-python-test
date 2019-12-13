@@ -1,7 +1,7 @@
 import functools
 
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app
+    Blueprint, flash, g, redirect, render_template, request, session, url_for, current_app, flash
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -38,12 +38,23 @@ def todo_list():
 @bp.route('/new', methods=('GET','POST'))
 @login_required
 def post():
-    g.db.execute(
-        "INSERT INTO todos (user_id, description) VALUES ('%s', '%s')"
-        % (session['user_id'], request.form.get('description', ''))
-    )
-    g.db.commit()
-    return redirect('/todo')
+    error = None
+    if not request.form['description']:
+        error = 'Description cannot be empty'
+
+    if error == None:
+
+        g.db.execute(
+            "INSERT INTO todos (user_id, description) VALUES ('%s', '%s')"
+            % (session['user_id'], request.form.get('description', ''))
+        )
+        g.db.commit()
+        flash('Todo item added successfuly')
+
+    if error is not None:
+        flash(error)
+
+    return redirect(url_for('todos.todo_list'))
 
 @bp.route('<int:id>/delete/', methods=('GET', 'DELETE'))
 @login_required
