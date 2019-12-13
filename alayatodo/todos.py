@@ -62,4 +62,5 @@ def delete(id):
     print("Deleting item id '%s'" % id)
     g.db.execute("DELETE FROM todos where id='%s'" % id)
     g.db.commit()
+    flash('Item successfully deleted!')
     return redirect(url_for('todos.todo_list'))
