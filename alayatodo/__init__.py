@@ -22,5 +22,8 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
+    from . import todos
+    app.register_blueprint(todos.bp)
+
     return app
 
