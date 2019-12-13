@@ -28,7 +28,6 @@ def todo(id):
 @bp.route('/todo_list')
 @login_required
 def todo_list():
-    print('fetching the todo list for current user')
     cur = g.db.execute("SELECT * FROM todos where user_id='%s'" % session['user_id'])
     todos = cur.fetchall()
     
@@ -64,3 +63,14 @@ def delete(id):
     g.db.commit()
     flash('Item successfully deleted!')
     return redirect(url_for('todos.todo_list'))
+
+@bp.route('<int:id>/json/')
+@login_required
+def json_item(id):
+    todo = get_todo_item(id)
+    return render_template('todo/json.html', todo="{ id:'%s', user_id:'%s', desciption:'%s' }" %(todo['id'], todo['user_id'], todo['description']))
+
+def get_todo_item(id):
+    todo = cur = g.db.execute("SELECT * FROM todos WHERE id ='%s'" % id)
+    todo = cur.fetchone()
+    return todo
