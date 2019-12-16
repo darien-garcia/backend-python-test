@@ -5,7 +5,6 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from alayatodo.db import get_db
 from alayatodo.auth import login_required
 
 bp = Blueprint('todos', __name__, url_prefix='/todos')

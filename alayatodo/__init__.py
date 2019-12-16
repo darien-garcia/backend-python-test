@@ -1,29 +1,18 @@
-from flask import Flask, g
-import sqlite3
-import os
-
 from flask import Flask
+from alayatodo.config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
+app = Flask(__name__)
 
-def create_app(test_config=None):
-    
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        DEBUG = True,
-        DATABASE='/tmp/alayatodo.db',
-    )
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+from . import auth
+app.register_blueprint(auth.bp)
 
-    from . import auth
-    app.register_blueprint(auth.bp)
+from . import todos
+app.register_blueprint(todos.bp)
 
-    from . import todos
-    app.register_blueprint(todos.bp)
-
-    return app
-
+from alayatodo import models
