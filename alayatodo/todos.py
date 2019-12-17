@@ -33,7 +33,7 @@ def todo_list():
     query = db.session.query(todos_model).filter(
         todos_model.user_id == session['user_id']
         )
-    total = 10
+    total = query.count()
     todos = query.paginate(page, ITEMS_PER_PAGE, False)
 
     next_url = url_for('todos.todo_list', page=todos.next_num) \
