@@ -5,7 +5,12 @@ from flask_migrate import Migrate
 
 app = Flask(__name__)
 
+
 app.config.from_object(Config)
+app.DEBUG = True
+app.secret_key = 'development key'
+app.config['SESSION_TYPE'] = 'filesystem'
+
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 

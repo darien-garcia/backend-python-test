@@ -5,6 +5,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from alayatodo.models import users
 from alayatodo import db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -15,22 +16,24 @@ def login():
         username = request.form['username']
         password = request.form['password']
         error = None
-        user = db.execute(
-            'SELECT * FROM users WHERE username = ?', (username,)
-        ).fetchone()
 
-        if user is None or not check_password_hash(user['password'], password):
+        user = db.session.query(users).filter(users.username == username).first()
+
+        if invalid_credentials(user, password):
             error = 'Incorrect username or password.'
        
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
-            session['username'] = user['username']
+            session['user_id'] = user.id
+            session['username'] = user.username
             return redirect(url_for('todos.home'))
 
         flash(error)
 
     return render_template('auth/login.html')
+
+def invalid_credentials(user, password):
+    return user is None or not check_password_hash(user.password, password)
 
 @bp.before_app_request
 def load_logged_in_user():
@@ -39,9 +42,8 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = db.execute(
-            'SELECT * FROM users WHERE id = ?', (user_id,)
-        ).fetchone()
+        g.user = db.session.query(users).filter(users.id == user_id).first()
+        
 
 @bp.route('/logout')
 def logout():
