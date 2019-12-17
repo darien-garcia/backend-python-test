@@ -21,6 +21,12 @@
                 </td>
             </tr>
         {% endfor %}
+        {% if prev_url %}
+            <a href="{{ prev_url }}">&lt;&lt; page {{ prev }} of {{ page_total }}</a>
+        {% endif %}
+        {% if next_url %}
+            <a href="{{ next_url }}"> page {{ next }} of {{ page_total }} &gt;&gt;</a>
+        {% endif %}
         <tr>
             <form method="post" action="{{ url_for('todos.post') }}">
                 <td colspan="3">

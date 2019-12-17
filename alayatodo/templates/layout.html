@@ -19,7 +19,7 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             {% if session.user_id != None %}
-              <li><a href="{{ url_for('todos.todo_list') }}">Todo list</a></li>
+              <li><a href="{{ url_for('todos.todo_list', page=1) }}">Todo list</a></li>
             {% endif %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
