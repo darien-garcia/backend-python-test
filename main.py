@@ -10,8 +10,7 @@ import sqlite3
 
 from alayatodo import create_app
 from alayatodo import db
-
-app = create_app()
+from alayatodo import app
 
 def _run_sql(filename):
     try:
