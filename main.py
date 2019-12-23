@@ -8,7 +8,6 @@ from docopt import docopt
 import os
 import sqlite3
 
-from alayatodo import create_app
 from alayatodo import db
 from alayatodo import app
 
