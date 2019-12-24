@@ -10,6 +10,7 @@ app.config.from_object(Config)
 app.DEBUG = True
 app.secret_key = 'development key'
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['DATABASE'] = 'tmp/alayatodo.db'
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
